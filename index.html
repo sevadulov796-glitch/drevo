@@ -82,11 +82,13 @@ main{flex:1;position:relative;min-height:0}
 .card .n1 i{font-style:normal;font-weight:600;color:var(--muted);font-size:14.5px}
 .card .n2{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card .dt{font-size:11.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card.cmp{padding:7px 9px 6px 13px;border-radius:11px}.card.cmp .rel{font-size:9.5px;letter-spacing:.5px}.card.cmp .n1{font-size:15px}.card.cmp .n2{font-size:11.5px}.card.cmp .dt{font-size:10.5px}.card.cmp .av{width:32px;height:32px;top:7px;right:7px}.card.cmp.hasav .rel,.card.cmp.hasav .n1{padding-right:36px}
 .card.sm .n1{font-size:16px}.card.sm .n2{font-size:11.5px}.card.sm .rel{font-size:9.5px}
 .card.hyp{border-style:dashed;border-color:var(--hyp);background:color-mix(in srgb,var(--card) 55%,transparent);box-shadow:none}
 .card.ph{border:1.5px dashed var(--line);background:color-mix(in srgb,var(--card) 35%,transparent);box-shadow:none;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12px;padding:8px}
 .card.ph::before{display:none}
 .card.anc{border:2px solid color-mix(in srgb,var(--bark) 70%,transparent)}
+.card.flashc{animation:oflash 1.6s ease}
 .card.focus{border:2px solid var(--focus);box-shadow:0 0 0 4px color-mix(in srgb,var(--focus) 20%,transparent),var(--shadow)}
 .card.me{background:var(--me);color:var(--paper);border-color:var(--me)}
 .card.me .dt,.card.me .n1 i{color:color-mix(in srgb,var(--paper) 70%,transparent)}
@@ -105,6 +107,8 @@ main{flex:1;position:relative;min-height:0}
 .zoom{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px;z-index:15}
 .zoom button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line2);background:var(--card);box-shadow:var(--shadow);font-size:20px;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
 .zoom svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.allbar{position:absolute;left:0;right:0;top:0;z-index:15;display:none;gap:6px;overflow-x:auto;padding-block:10px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(12px,env(safe-area-inset-right,0px));background:linear-gradient(var(--bg) 70%,transparent);-webkit-overflow-scrolling:touch}
+.allbar .nbtn{flex:0 0 auto;box-shadow:var(--shadow)}
 .toast{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--paper);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;z-index:16;white-space:nowrap;transition:opacity .5s;pointer-events:none;max-width:calc(100% - 90px);overflow:hidden;text-overflow:ellipsis}
 .toast.off{opacity:0}
 /* список */
@@ -261,6 +265,7 @@ main{flex:1;position:relative;min-height:0}
   <section class="view scroll" id="v-out"><div class="out" id="out"></div></section>
   <section class="view scroll" id="v-list"><div class="list" id="list"></div></section>
   <section class="view scroll" id="v-about"><div class="about" id="about"></div></section>
+  <div class="allbar" id="allbar"><button class="nbtn sm" data-aj="me">Где ты</button><button class="nbtn sm" data-aj="leo"><span class="dot" style="background:var(--dul);margin:0 6px 1px 0"></span>Дуловы</button><button class="nbtn sm" data-aj="mik"><span class="dot" style="background:var(--kor);margin:0 6px 1px 0"></span>Коротченко</button><button class="nbtn sm" data-aj="evg"><span class="dot" style="background:var(--sta);margin:0 6px 1px 0"></span>Стахеевы</button><button class="nbtn sm" data-aj="bor"><span class="dot" style="background:var(--kuz);margin:0 6px 1px 0"></span>Кузьменко</button><button class="nbtn sm" data-aj="zak"><span class="dot" style="background:var(--pet);margin:0 6px 1px 0"></span>Пидько</button><button class="nbtn sm" data-aj="fit">Всё целиком</button></div>
   <div class="zoom" id="zoom">
     <button id="zin" aria-label="Крупнее">+</button>
     <button id="zout" aria-label="Мельче">−</button>
@@ -420,7 +425,7 @@ function fullDate(s,p){if(!s)return '';if(hideDates&&living(p)){const y=yearOf(s
 const shortRel=r=>String(r).split(' (')[0].split(' — ')[0];
 
 function cardHTML(p,x,y,w,h,o={}){
-  const cls=['card'];if(p.id===ME)cls.push('me');if(PH[p.id])cls.push('hasav');if(o.anc)cls.push('anc');if(p.st==='hyp')cls.push('hyp');if(o.focus)cls.push('focus');if(o.sm)cls.push('sm');
+  const cls=['card'];if(o.cmp)cls.push('cmp');if(p.id===ME)cls.push('me');if(PH[p.id])cls.push('hasav');if(o.anc)cls.push('anc');if(p.st==='hyp')cls.push('hyp');if(o.focus)cls.push('focus');if(o.sm)cls.push('sm');
   const sn=realSn(p);
   const n1=(sn?esc(sn):'')+(p.ms&&p.ms!=='?'?` <i>(${esc(p.ms)})</i>`:'');
   const n2=esc([p.fn,p.pn].filter(Boolean).join(' '));
@@ -455,6 +460,7 @@ class Stage{
   zoomBy(f){this.zoomAt(f,this.vw/2,this.vh/2)}
   fit(){const pad=20;this.s=clamp(Math.min((this.vw-pad*2)/this.W,(this.vh-pad*2)/this.H),.12,1.1);this.x=(this.vw-this.W*this.s)/2;this.y=(this.vh-this.H*this.s)/2;this.apply()}
   center(cx,cy,s){if(s)this.s=s;this.x=this.vw/2-cx*this.s;this.y=this.vh/2-cy*this.s;this.apply()}
+  glide(cx,cy,s){const c=this.c;c.style.transition='transform .5s cubic-bezier(.2,.7,.2,1)';this.center(cx,cy,s);clearTimeout(this.gt);this.gt=setTimeout(()=>{c.style.transition=''},560)}
   down(e){
     if(e.button>0)return;
     try{this.el.setPointerCapture(e.pointerId)}catch(_){}
@@ -584,7 +590,8 @@ function pava(y,w){const v=[],wt=[],len=[];for(let i=0;i<y.length;i++){v.push(y[
   while(v.length>1&&v[v.length-2]>v[v.length-1]){const a=v.length-2,nw=wt[a]+wt[a+1];v[a]=(v[a]*wt[a]+v[a+1]*wt[a+1])/nw;wt[a]=nw;len[a]+=len[a+1];v.pop();wt.pop();len.pop()}}
   const out=[];v.forEach((val,i)=>{for(let k=0;k<len[i];k++)out.push(val)});return out}
 function renderAll(){
-  const CW=186,CH=88,GC=14,GB=34,VG=110,PADL=190,PADT=60,PADR=80;
+  const M=mobile();
+  const CW=M?158:186,CH=M?72:88,GC=M?10:14,GB=M?22:34,VG=M?84:110,PADL=M?128:190,PADT=M?70:60,PADR=M?40:80;
   const G=gensFromMe();const ids=P.map(p=>p.id).filter(id=>G[id]!==undefined);
   const gs=ids.map(i=>G[i]);const gmin=Math.min(...gs),gmax=Math.max(...gs);
   const anc=pedigreeSet();
@@ -661,11 +668,11 @@ function renderAll(){
   let html='';
   for(let g=gmin;g<=gmax;g++)html+=`<div class="gl" style="left:16px;width:${PADL-44}px;top:${rowTop(g)+14}px">${GL[g]||''}</div>`;
   all.forEach(b=>b.m.forEach((m,i)=>{const x=b.x+b.off[i]-CW/2,y=rowTop(b.g);
-    html+=cardHTML(byId[m],x,y,CW,CH,{anc:anc.has(m)&&m!==ME});allPos[m]={x:x+CW/2,y:y+CH/2}}));
+    html+=cardHTML(byId[m],x,y,CW,CH,{anc:anc.has(m)&&m!==ME,cmp:M});allPos[m]={x:x+CW/2,y:y+CH/2}}));
   stAll.set(svg+html,W,H);
 }
 function initAllView(){
-  if(mobile()){const p=allPos[ME];stAll.center(p.x,p.y-stAll.vh*.25/.5,.5)}
+  if(mobile()){const p=allPos[ME];const s=.74;stAll.center(p.x,p.y-stAll.vh*.22/s,s)}
   else stAll.fit();
 }
 
@@ -855,7 +862,7 @@ function renderAbout(){
   $('#about').innerHTML=`
   <h2>Как пользоваться</h2>
   <p><b>«Дерево»</b> — твои предки. <b>«Всё древо»</b> — все люди сразу, по поколениям: мужья и жёны рядом, линии от родителей к детям, твоя прямая линия выделена толстой «корой».</p><p> Ты внизу у ствола, выше родители, бабушки и дедушки, прадеды и дальше. <b>«Семья»</b> — выбранный человек с родителями, братьями и сёстрами, мужем или женой и детьми; нажми на любого — древо перестроится вокруг него. <b>«Люди»</b> — список всех ${P.length} человек по веткам.</p>
-  <p class="muted">На телефоне «Всё древо» идёт сверху вниз по ветвям — от самого старшего предка к детям и внукам. Вкладка «Семья» тоже листается обычной прокруткой: нажми на любого человека, чтобы перейти к нему; «← Назад» возвращает. Деревья двигай пальцем или мышью, увеличивай щипком или колёсиком. Кнопка ⤢ показывает всё целиком.</p>
+  <p class="muted">Во «Всём древе» кнопки сверху переносят к нужной ветви: «Где ты», «Дуловы», «Коротченко», «Стахеевы», «Кузьменко», «Пидько», «Всё целиком». На телефоне вкладка «Семья» листается обычной прокруткой: нажми на любого человека, чтобы перейти к нему; «← Назад» возвращает. Деревья двигай пальцем или мышью, увеличивай щипком или колёсиком. Кнопка ⤢ показывает всё целиком.</p>
   <div class="legend">
     <div><b>Фамилия (Фамилия)</b><br><span class="muted">в скобках — девичья или прежняя</span></div>
     <div><b>+3 на карточке</b><br><span class="muted">у человека есть братья и сёстры — они в его карточке</span></div>
@@ -942,15 +949,19 @@ let view='tree';
 function setView(v){
   view=v;
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  const sec=mobile()&&v==='fam'?'nav':(mobile()&&v==='all'?'out':v);
+  const sec=mobile()&&v==='fam'?'nav':v;
   document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+sec));
   $('#zoom').style.display=(sec==='tree'||sec==='fam'||sec==='all')?'flex':'none';
   if(v==='tree'){if(!treeDrawn){treeDrawn=true;initTreeView()}else stTree.apply()}
   if(v==='fam'){if(mobile()){closePanel();renderNav()}else renderFam()}
-  if(v==='all'){if(mobile()){closePanel();if(!outDrawn){outDrawn=true;renderOut()}}else if(!allDrawn){allDrawn=true;renderAll();initAllView()}else stAll.apply()}
+  $('#allbar').style.display=v==='all'?'flex':'none';
+  if(v==='all'){if(!allDrawn){allDrawn=true;renderAll();initAllView()}else stAll.apply()}
 }
 $('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setView(b.dataset.v)});
 const curStage=()=>view==='fam'?stFam:(view==='all'?stAll:stTree);
+$('#allbar').addEventListener('click',e=>{const b=e.target.closest('[data-aj]');if(!b)return;const k=b.dataset.aj;if(k==='fit'){stAll.c.style.transition='transform .5s ease';stAll.fit();setTimeout(()=>{stAll.c.style.transition=''},560);return}
+  const p=allPos[k];if(!p)return;const s=Math.max(stAll.s,mobile()?.74:.85);stAll.glide(p.x,p.y+(k==='me'?-stAll.vh*.18/s:stAll.vh*.12/s),s);
+  const el=stAll.c.querySelector(`.card[data-id="${k}"]`);if(el){el.classList.remove('flashc');void el.offsetWidth;el.classList.add('flashc')}});
 $('#zin').onclick=()=>curStage().zoomBy(1.25);
 $('#zout').onclick=()=>curStage().zoomBy(1/1.25);
 $('#zfit').onclick=()=>curStage().fit();
