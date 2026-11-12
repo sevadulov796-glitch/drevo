@@ -172,7 +172,7 @@ main{flex:1;position:relative;min-height:0}
 .oside{margin:22px 2px 0;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--muted)}
 .osec{font-family:var(--serif);font-size:26px;margin:6px 2px 4px;display:flex;align-items:center;gap:10px;color:var(--ink)}
 .osec .sw{width:12px;height:12px;border-radius:50%;background:var(--c)}
-.on{position:relative}
+.onode{position:relative}
 .orow{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line2);border-left:4px solid var(--c);border-radius:12px;padding:8px 10px;margin-top:8px;box-shadow:var(--shadow);cursor:pointer;min-width:0}
 .orow .nav-av{width:38px;height:38px;font-size:13px}
 .orow .nn{font-size:14.5px}
@@ -729,7 +729,7 @@ function orow(id,main){const p=byId[id],ph=PH[id];
     `<span class="nav-av">${ph?`<img src="${ph}" alt="">`:esc(initials(p))}</span>`+
     `<span class="nt"><span class="nn">${esc(fullName(p)||p.fn)}${p.ms&&p.ms!=='?'?` <i>(${esc(p.ms)})</i>`:''}</span><span class="nd">${esc(shortRel(p.rel))}${shortDates(p)?' · '+esc(shortDates(p)):''}</span></span></button>`}
 function onode(id,anc){
-  const p=byId[id];let h=`<div class="on" id="o-${id}" style="--c:${color(p)}">`+orow(id,anc.has(id));
+  const p=byId[id];let h=`<div class="onode" id="o-${id}" style="--c:${color(p)}">`+orow(id,anc.has(id));
   let kids='';
   U.filter(u=>u.includes(id)).forEach(u=>{
     const s=u[0]===id?u[1]:u[0],sp=byId[s];
