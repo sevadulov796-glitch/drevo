@@ -151,7 +151,8 @@ main{flex:1;position:relative;min-height:0}
 .nt{display:flex;flex-direction:column;min-width:0}
 .nr{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;font-weight:800;color:var(--c);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ncard.me .nr{color:#f2bf5e}
-.nn{font-weight:700;font-size:14.5px;line-height:1.22;overflow-wrap:anywhere}
+.nn{font-weight:700;font-size:14.5px;line-height:1.22;overflow-wrap:break-word;hyphens:auto;-webkit-hyphens:auto}
+.g2 .ncard{padding:9px 8px;gap:8px}.g2 .nav-av{width:36px;height:36px;font-size:13px}.g2 .nn{font-size:13.5px}
 .ncard.mini .nn{font-size:13px}
 .nd{font-size:12px;color:var(--muted)}
 .ncard.me .nd{color:color-mix(in srgb,var(--paper) 70%,transparent)}
@@ -986,6 +987,7 @@ addEventListener('resize',()=>{stTree.apply();stFam.apply();stAll.apply()});
 renderTree();renderList();renderAbout();
 {const h=new URLSearchParams(location.hash.slice(1));if(h.get('p')&&byId[h.get('p')])focusId=h.get('p');
  setView(h.get('v')||(mobile()?'fam':'tree'));if(h.get('open')&&byId[h.get('open')])openPanel(h.get('open'))}
+if(view==='fam'&&mobile()||view==='list'||view==='about')$('#toast').classList.add('off');
 setTimeout(()=>$('#toast').classList.add('off'),5500);
 </script>
 </body>
